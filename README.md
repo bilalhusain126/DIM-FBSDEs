@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Official PyTorch implementation for the Master's thesis, *"Deep Learning for High-Dimensional Forward-Backward Stochastic Differential Equations"*. This repository provides a unified framework for solving uncoupled, coupled, and McKean-Vlasov FBSDEs.
+Official PyTorch implementation for the Master's thesis, *"Deep Learning for High-Dimensional Forward-Backward Stochastic Differential Equations"*. This repository provides the **Deep Iterative Method (DIM)**, a unified framework for solving uncoupled, coupled, and McKean-Vlasov FBSDEs. The DIM leverages deep neural networks within a compositional, iterative structure to overcome the curse of dimensionality in high-dimensional settings.
 
 ## Features
 
