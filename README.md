@@ -178,18 +178,6 @@ class MyCustomEquation(FBSDE):
         return torch.sum(x**2, dim=1, keepdim=True)
 ```
 
-### Logging Configuration
-
-```python
-import logging
-
-# Set custom log level
-logging.getLogger('dim_fbsde').setLevel(logging.DEBUG)
-
-# Or disable logging
-logging.getLogger('dim_fbsde').setLevel(logging.WARNING)
-```
-
 ## Algorithm Details
 
 ### Deep Picard Iteration
@@ -210,10 +198,8 @@ Two approaches are available for estimating the control process Z:
 ## Performance Tips
 
 1. **GPU Acceleration**: CUDA support provides significant speedup for high-dimensional problems
-2. **Batch Size**: Larger batches (500-1000) improve GPU utilization
-3. **Network Architecture**: Start with 3-4 hidden layers of 40-64 units each
-4. **Picard Iterations**: 5-10 iterations typically sufficient for convergence
-5. **Method Selection**: Use 'regression' for faster training, 'gradient' for higher accuracy
+2. **Network Architecture**: Start with 3-4 hidden layers of 40-64 units each
+3. **Picard Iterations**: 5-10 iterations typically sufficient for convergence
 
 ## Examples
 
