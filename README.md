@@ -1,6 +1,6 @@
 # Deep Iterative Method for Forward-Backward SDEs
 
-A production-ready implementation of the Deep Picard Iteration method for solving high-dimensional Forward-Backward Stochastic Differential Equations (FBSDEs), including uncoupled, coupled, and McKean-Vlasov systems.
+A PyTorch implementation of the Deep Picard Iteration method for solving high-dimensional Forward-Backward Stochastic Differential Equations (FBSDEs), including uncoupled, coupled, and McKean-Vlasov systems. Developed as part of a Master's thesis at the University of Toronto.
 
 ## Overview
 
@@ -10,17 +10,23 @@ This package provides efficient GPU-accelerated solvers for various classes of F
 - **Coupled FBSDEs**: Systems where forward dynamics depend on backward processes
 - **McKean-Vlasov FBSDEs**: Mean-field systems with distribution-dependent coefficients
 
-The implementation leverages PyTorch for automatic differentiation and GPU acceleration, making it suitable for high-dimensional problems (50-100+ dimensions).
+The implementation leverages PyTorch for automatic differentiation and GPU acceleration, enabling efficient numerical solutions for high-dimensional problems.
 
 ## Features
 
-- ✅ **Multiple Solver Types**: Uncoupled, Coupled, and McKean-Vlasov
-- ✅ **GPU Acceleration**: Full CUDA support for high-performance computing
-- ✅ **Benchmark Equations**: Pre-implemented standard test problems (BSB, Hure, etc.)
-- ✅ **Neural Network Architecture**: Multi-layer perceptron for approximating Y and Z
-- ✅ **Visualization Tools**: GPU-accelerated plotting utilities for analysis
-- ✅ **Type-Safe**: Full type hints and input validation
-- ✅ **Production-Ready**: Logging, error handling, and proper package structure
+- **Multiple Solver Types**: Uncoupled, Coupled, and McKean-Vlasov FBSDEs
+- **GPU Acceleration**: Full CUDA support via PyTorch
+- **Benchmark Problems**: Five standard test equations with analytical solutions
+  - Black-Scholes-Barenblatt (BSB)
+  - Hure et al. decoupled system
+  - Z-Coupled FBSDE
+  - Fully-Coupled FBSDE
+  - McKean-Vlasov mean-field system
+- **Two Solving Methods**: Gradient-based and regression-based Z approximation
+- **Neural Network Architecture**: Customizable multi-layer perceptrons
+- **Visualization Suite**: Pathwise comparison and error analysis plotting
+- **Type-Safe**: Comprehensive type hints throughout codebase
+- **Well-Documented**: Detailed docstrings and usage examples
 
 ## Installation
 
@@ -28,10 +34,10 @@ The implementation leverages PyTorch for automatic differentiation and GPU accel
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd Repository\ copy
+git clone https://github.com/bilalhusain126/DIM-FBSDEs.git
+cd DIM-FBSDEs
 
-# Install in development mode
+# Install the package
 pip install -e .
 
 # Or install with development dependencies
@@ -184,17 +190,35 @@ logging.getLogger('dim_fbsde').setLevel(logging.DEBUG)
 logging.getLogger('dim_fbsde').setLevel(logging.WARNING)
 ```
 
+## Algorithm Details
+
+### Deep Picard Iteration
+
+The solver implements the Deep Picard iteration scheme, which iteratively refines neural network approximations of the solution processes Y and Z. The method alternates between:
+
+1. **Path simulation**: Generate Monte Carlo paths of the forward SDE
+2. **Network training**: Optimize neural networks to satisfy the BSDE via Picard iteration
+3. **Convergence**: Iterate until the change between successive approximations is small
+
+### Z Estimation Methods
+
+Two approaches are available for estimating the control process Z:
+
+- **Gradient Method** (`z_method='gradient'`): Computes Z via automatic differentiation as Z = σ(t,X,Y,Z) · ∇Y. More accurate but slower to train.
+- **Regression Method** (`z_method='regression'`): Directly approximates Z with a separate neural network. Faster training but requires more parameters.
+
 ## Performance Tips
 
-1. **GPU Acceleration**: Always use CUDA when available for 10-50x speedup
+1. **GPU Acceleration**: CUDA support provides significant speedup for high-dimensional problems
 2. **Batch Size**: Larger batches (500-1000) improve GPU utilization
-3. **Network Size**: Start with 3-4 hidden layers of 40-64 units
-4. **Z-Method**: Use 'regression' for faster training, 'gradient' for better accuracy
+3. **Network Architecture**: Start with 3-4 hidden layers of 40-64 units each
+4. **Picard Iterations**: 5-10 iterations typically sufficient for convergence
+5. **Method Selection**: Use 'regression' for faster training, 'gradient' for higher accuracy
 
 ## Examples
 
-See the `notebooks/` directory for complete examples:
-- `test.ipynb`: Comprehensive examples for all benchmark problems
+See the `notebooks/` directory for comprehensive demonstrations:
+- `benchmark_demonstrations.ipynb`: Complete examples for all five benchmark problems with visualization and error analysis
 
 ## Citation
 
@@ -216,16 +240,18 @@ MIT License - see LICENSE file for details.
 ## Author
 
 **Bilal Saleh Husain**
-- University of Toronto
-- Master's Thesis, 2025
+Master of Applied Science, Computational Finance
+University of Toronto, 2025
 
-## Acknowledgments
+## References
 
-Based on research in Deep Learning methods for high-dimensional FBSDEs, building on work by:
-- Han, Jentzen, E (2018) - Deep Learning-Based Numerical Methods
-- Hure, Pham, Warin (2020) - Deep Backward Schemes
-- Ji, Peng, Zhou (2021) - Coupled FBSDEs
+This implementation is based on recent advances in deep learning methods for FBSDEs:
+
+- Han, J., Jentzen, A., & E, W. (2018). Solving high-dimensional partial differential equations using deep learning. *Proceedings of the National Academy of Sciences*, 115(34), 8505-8510.
+- Hure, C., Pham, H., & Warin, X. (2020). Deep backward schemes for high-dimensional nonlinear PDEs. *Mathematics of Computation*, 89(324), 1547-1579.
+- Raissi, M. (2018). Forward-backward stochastic neural networks: Deep learning of high-dimensional partial differential equations. *arXiv preprint arXiv:1804.07010*.
+- Ji, S., Peng, S., & Zhou, C. (2021). Coupled FBSDEs and deep learning. *arXiv preprint arXiv:2102.04242*.
 
 ---
 
-**Status**: Production-Ready | **Version**: 1.0.0
+**Version**: 1.0.0 | **License**: MIT
