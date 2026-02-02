@@ -82,7 +82,7 @@ class McKeanVlasovSolver:
                             and the history of the global convergence error.
         """
         if self.train_cfg.verbose:
-            logger.info(f"Starting McKean-Vlasov Solver (Global Iters: {self.cfg.global_iterations})...")
+            logger.info(f"Starting McKean-Vlasov Solver (Global Iters: {self.cfg.global_iterations}, Inner Iters: {self.cfg.picard_iterations})...")
 
         # 1. Initialization (k=0)
         M, N = self.cfg.num_paths, self.cfg.N

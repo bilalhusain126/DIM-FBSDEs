@@ -17,8 +17,8 @@ The implementation leverages PyTorch for automatic differentiation and GPU accel
 - ✅ **Multiple Solver Types**: Uncoupled, Coupled, and McKean-Vlasov
 - ✅ **GPU Acceleration**: Full CUDA support for high-performance computing
 - ✅ **Benchmark Equations**: Pre-implemented standard test problems (BSB, Hure, etc.)
-- ✅ **Flexible Network Architectures**: MLP and Deep Galerkin Method (DGM) networks
-- ✅ **Visualization Tools**: Comprehensive plotting utilities for analysis
+- ✅ **Neural Network Architecture**: Multi-layer perceptron for approximating Y and Z
+- ✅ **Visualization Tools**: GPU-accelerated plotting utilities for analysis
 - ✅ **Type-Safe**: Full type hints and input validation
 - ✅ **Production-Ready**: Logging, error handling, and proper package structure
 
@@ -120,8 +120,7 @@ dim_fbsde/
 │   ├── coupled.py     # Global iteration for coupled systems
 │   └── mckean_vlasov.py  # Solver for mean-field systems
 ├── nets/              # Neural network architectures
-│   ├── mlp.py         # Multi-layer perceptron
-│   └── dgm.py         # Deep Galerkin Method network
+│   └── mlp.py         # Multi-layer perceptron
 ├── utils/             # Utilities
 │   └── visualizations.py  # Plotting functions
 └── config.py          # Configuration dataclasses
