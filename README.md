@@ -227,7 +227,7 @@ If you use this code in your research, please cite:
 ```bibtex
 @mastersthesis{husain2025fbsde,
   author  = {Bilal Saleh Husain},
-  title   = {Deep Iterative Methods for Forward-Backward Stochastic Differential Equations},
+  title   = {A Deep Iterative Method for Coupled and McKean-Vlasov FBSDEs},
   school  = {University of Toronto},
   year    = {2025}
 }
@@ -240,17 +240,8 @@ MIT License - see LICENSE file for details.
 ## Author
 
 **Bilal Saleh Husain**
-Master of Applied Science, Computational Finance
+Master of Mathematics,
 University of Toronto, 2025
-
-## References
-
-This implementation is based on recent advances in deep learning methods for FBSDEs:
-
-- Han, J., Jentzen, A., & E, W. (2018). Solving high-dimensional partial differential equations using deep learning. *Proceedings of the National Academy of Sciences*, 115(34), 8505-8510.
-- Hure, C., Pham, H., & Warin, X. (2020). Deep backward schemes for high-dimensional nonlinear PDEs. *Mathematics of Computation*, 89(324), 1547-1579.
-- Raissi, M. (2018). Forward-backward stochastic neural networks: Deep learning of high-dimensional partial differential equations. *arXiv preprint arXiv:1804.07010*.
-- Ji, S., Peng, S., & Zhou, C. (2021). Coupled FBSDEs and deep learning. *arXiv preprint arXiv:2102.04242*.
 
 ---
 
