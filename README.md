@@ -233,10 +233,6 @@ If you use this code in your research, please cite:
 }
 ```
 
-## License
-
-MIT License - see LICENSE file for details.
-
 ## Author
 
 **Bilal Saleh Husain**
@@ -245,4 +241,4 @@ University of Toronto, 2025
 
 ---
 
-**Version**: 1.0.0 | **License**: MIT
+**Version**: 1.0.0
