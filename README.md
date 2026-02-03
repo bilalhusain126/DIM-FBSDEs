@@ -221,17 +221,31 @@ For **Coupled** and **McKean-Vlasov** systems, a global fixed-point iteration re
 - **Forward Step**: Simulate state process using frozen coefficients from previous estimates Y<sup>(k-1)</sup>, Z<sup>(k-1)</sup> (and empirical law for mean-field)
 - **Backward Step**: Solve the resulting uncoupled BSDE using Deep Picard Iteration to update Y<sup>(k)</sup>, Z<sup>(k)</sup>
 
-### Z Approximation Methods
+### Z Estimation Schemes
 
-**Gradient Method** (`z_method='gradient'`):
-- Computes Z via automatic differentiation: Z = ∇Y · σ(t,X,Y,Z)
+The control process Z<sub>t</sub> is approximated using one of two methods:
+
+**Gradient-Based** (`z_method='gradient'`):
+
+Computes Z<sub>t</sub> via automatic differentiation using the Feynman-Kac representation:
+
+```math
+Z_t = \nabla_x \mathcal{N}_Y(t, X_t) \cdot \sigma(t, X_t, Y_t, Z_t)
+```
+
 - **Pros**: High accuracy, theoretically consistent
 - **Cons**: Computationally expensive for very high dimensions
 
-**Regression Method** (`z_method='regression'`):
-- Trains separate network to approximate martingale representation
+**Regression-Based** (`z_method='regression'`):
+
+Trains a secondary network to approximate the martingale representation term:
+
+```math
+Z_t \approx \frac{1}{\Delta t} \mathbb{E}\left[ (Y_{t+\Delta t} - Y_t) \Delta W_t^\top \mid \mathcal{F}_t \right]
+```
+
 - **Pros**: Faster execution, avoids second-order derivatives
-- **Cons**: Additional approximation error
+- **Cons**: Introduces additional approximation error
 
 ## Performance Tips
 
