@@ -72,15 +72,14 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 dim_x = 3
 equation = BSBEquation(dim_x=dim_x, r=0.05, sigma=0.4, device=device)
 
-# 2. Configure solver
-solver_cfg = SolverConfig(
-    T=1.0,                      # Terminal time
-    N=120,                      # Time discretization steps
-    num_paths=8000,             # Monte Carlo trajectories
-    picard_iterations=10,       # Fixed-point iterations
-    z_method='regression',      # Control approximation scheme
-    device=device
-)
+# 2. Configure solver (shared settings)
+base_solver_cfg = {
+    'T': 1.0,
+    'N': 120,
+    'num_paths': 8000,
+    'picard_iterations': 10,
+    'device': device
+}
 
 # 3. Configure training
 train_cfg = TrainingConfig(
@@ -91,19 +90,25 @@ train_cfg = TrainingConfig(
 )
 
 # 4. Initialize function approximators
-# Input: (t, x) -> dim 1 + dim_x
-# Output: Y (dim 1) and Z (dim_x)
-input_dim = 1 + dim_x  
-nn_Y = MLP(input_dim=input_dim, output_dim=1, hidden_dims=[64, 64, 64])
-nn_Z = MLP(input_dim=input_dim, output_dim=dim_x, hidden_dims=[64, 64, 64])
+input_dim = 1 + dim_x
+hidden_layers = [64, 64, 64]
 
-# 5. Solve
-# Executes the Deep Picard Iteration
-solver = UncoupledFBSDESolver(equation, solver_cfg, train_cfg, nn_Y, nn_Z)
-solution = solver.solve()
+# 5. Solve with Gradient Method
+print("Running Gradient Method...")
+solver_cfg_grad = SolverConfig(**base_solver_cfg, z_method='gradient')
+nn_Y_grad = MLP(input_dim=input_dim, output_dim=1, hidden_dims=hidden_layers)
+solver_grad = UncoupledFBSDESolver(equation, solver_cfg_grad, train_cfg, nn_Y_grad, nn_Z=None)
+solution_grad = solver_grad.solve()
 
-# 6. Access results
-print(f"Solution shapes: X={solution['X'].shape}, Y={solution['Y'].shape}")
+# 6. Solve with Regression Method
+print("Running Regression Method...")
+solver_cfg_reg = SolverConfig(**base_solver_cfg, z_method='regression')
+nn_Y_reg = MLP(input_dim=input_dim, output_dim=1, hidden_dims=hidden_layers)
+nn_Z_reg = MLP(input_dim=input_dim, output_dim=dim_x, hidden_dims=hidden_layers)
+solver_reg = UncoupledFBSDESolver(equation, solver_cfg_reg, train_cfg, nn_Y_reg, nn_Z_reg)
+solution_reg = solver_reg.solve()
+
+print("Both methods completed successfully")
 ```
 
 ### Visualization
@@ -111,17 +116,24 @@ print(f"Solution shapes: X={solution['X'].shape}, Y={solution['Y'].shape}")
 ```python
 from dim_fbsde.utils import plot_pathwise_comparison
 
-# Compare numerical and analytical solutions
+# Compare both methods against analytical solution
+# Model-based evaluation ensures fair comparison on identical X paths
 fig, axes = plot_pathwise_comparison(
-    solutions=[solution],
-    labels=['Numerical'],
-    analytical_Y_func=equation.analytical_y,
+    solutions=[solution_grad],                           # X paths from gradient method
+    labels=['DIM (Gradient)', 'DIM (Regression)'],       # Method labels
+    models=[
+        (solver_grad.nn_Y, None),                        # Gradient: only Y network
+        (solver_reg.nn_Y, solver_reg.nn_Z)               # Regression: Y and Z networks
+    ],
+    z_methods=['gradient', 'regression'],                # Z computation methods
+    equation=equation,                                   # Needed for gradient Z = σ·∇Y
+    analytical_Y_func=equation.analytical_y,             # True solution for comparison
     analytical_Z_func=equation.analytical_z,
-    analytical_Y_kwargs={'T_terminal': solver_cfg.T},
-    analytical_Z_kwargs={'T_terminal': solver_cfg.T},
-    component_idx=0,
+    analytical_Y_kwargs={'T_terminal': solver_cfg_grad.T},
+    analytical_Z_kwargs={'T_terminal': solver_cfg_grad.T},
+    component_idx=0,                                     # Which Z component to plot
     device=device,
-    num_paths_to_plot=5
+    num_paths_to_plot=5                                  # Number of sample paths
 )
 ```
 
