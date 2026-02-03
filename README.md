@@ -203,29 +203,35 @@ class MyCustomEquation(FBSDE):
 
 ## Algorithm Details
 
-### 1. Deep Picard Iteration (Uncoupled Solver)
-For uncoupled systems, the solver computes the fixed point of the solution map defined by the integral form of the BSDE. At each step $k$:
-1.  **Simulation**: Generate forward paths $X_t$ using the Euler-Maruyama scheme.
-2.  **Approximation**: Train a neural network $\mathcal{N}_Y(t, x; \theta)$ to minimize the $L^2$-error against the target:
-    $$ \mathcal{L}(\theta) = \mathbb{E}\left[ \left| \mathcal{N}_Y(t_i, X_{t_i}) - \left( g(X_T) + \int_{t_i}^T f(s, X_s, Y_s^{(k-1)}, Z_s^{(k-1)}) ds \right) \right|^2 \right] $$
+### Deep Picard Iteration (Uncoupled Solver)
 
-### 2. Global Iteration (Coupled & Mean-Field)
-For **Coupled** and **McKean-Vlasov** systems, the solver employs a global fixed-point iteration to resolve the circular dependencies:
-*   **Forward Step**: Simulate the state process $X^{(k)}$ using the coefficients frozen at the previous estimates $Y^{(k-1)}, Z^{(k-1)}$ (and empirical law $\mathcal{L}^{(k-1)}$ for Mean-Field).
-*   **Backward Step**: Solve the resulting conditional uncoupled BSDE using the Deep Picard Iteration to update $Y^{(k)}, Z^{(k)}$.
+For uncoupled systems, the solver computes the fixed point of the solution map defined by the integral form of the BSDE. At each iteration k:
 
-### 3. Z Estimation Schemes
-The control process $Z_t$ is approximated using one of two methods:
+1. **Simulation**: Generate forward paths using Euler-Maruyama scheme
+2. **Approximation**: Train neural network to minimize L²-error:
 
-*   **Gradient-Based** (`z_method='gradient'`):
-    Computes $Z_t$ via Automatic Differentiation using the Feynman-Kac representation:
-    $$ Z_t = \nabla_x \mathcal{N}_Y(t, X_t) \cdot \sigma(t, X_t) $$
-    *Pros:* High accuracy, theoretically consistent. *Cons:* Computationally expensive for very high dimensions.
+```math
+\mathcal{L}(\theta) = \mathbb{E}\left[ \left| \mathcal{N}_Y(t_i, X_{t_i}) - \left( g(X_T) + \int_{t_i}^T f(s, X_s, Y_s^{(k-1)}, Z_s^{(k-1)}) ds \right) \right|^2 \right]
+```
 
-*   **Regression-Based** (`z_method='regression'`):
-    Trains a secondary network $\mathcal{N}_Z(t, x; \phi)$ to approximate the martingale representation term:
-    $$ Z_t \approx \frac{1}{\Delta t} \mathbb{E}[ (Y_{t+\Delta t} - Y_t) \Delta W_t^\top \mid \mathcal{F}_t ] $$
-    *Pros:* Avoids second-order derivatives, faster per-step execution. *Cons:* Introduces additional approximation error.
+### Global Iteration (Coupled & Mean-Field)
+
+For **Coupled** and **McKean-Vlasov** systems, a global fixed-point iteration resolves circular dependencies:
+
+- **Forward Step**: Simulate state process using frozen coefficients from previous estimates Y^(k-1), Z^(k-1) (and empirical law for mean-field)
+- **Backward Step**: Solve the resulting uncoupled BSDE using Deep Picard Iteration to update Y^(k), Z^(k)
+
+### Z Approximation Methods
+
+**Gradient Method** (`z_method='gradient'`):
+- Computes Z via automatic differentiation: Z = ∇Y · σ(t,X,Y,Z)
+- **Pros**: High accuracy, theoretically consistent
+- **Cons**: Computationally expensive for very high dimensions
+
+**Regression Method** (`z_method='regression'`):
+- Trains separate network to approximate martingale representation
+- **Pros**: Faster execution, avoids second-order derivatives
+- **Cons**: Additional approximation error
 
 ## Performance Tips
 
