@@ -203,20 +203,29 @@ class MyCustomEquation(FBSDE):
 
 ## Algorithm Details
 
-### Deep Picard Iteration
+### 1. Deep Picard Iteration (Uncoupled Solver)
+For uncoupled systems, the solver computes the fixed point of the solution map defined by the integral form of the BSDE. At each step $k$:
+1.  **Simulation**: Generate forward paths $X_t$ using the Euler-Maruyama scheme.
+2.  **Approximation**: Train a neural network $\mathcal{N}_Y(t, x; \theta)$ to minimize the $L^2$-error against the target:
+    $$ \mathcal{L}(\theta) = \mathbb{E}\left[ \left| \mathcal{N}_Y(t_i, X_{t_i}) - \left( g(X_T) + \int_{t_i}^T f(s, X_s, Y_s^{(k-1)}, Z_s^{(k-1)}) ds \right) \right|^2 \right] $$
 
-The solver implements the Deep Picard iteration scheme, which iteratively refines neural network approximations of the solution processes Y and Z. The method alternates between:
+### 2. Global Iteration (Coupled & Mean-Field)
+For **Coupled** and **McKean-Vlasov** systems, the solver employs a global fixed-point iteration to resolve the circular dependencies:
+*   **Forward Step**: Simulate the state process $X^{(k)}$ using the coefficients frozen at the previous estimates $Y^{(k-1)}, Z^{(k-1)}$ (and empirical law $\mathcal{L}^{(k-1)}$ for Mean-Field).
+*   **Backward Step**: Solve the resulting conditional uncoupled BSDE using the Deep Picard Iteration to update $Y^{(k)}, Z^{(k)}$.
 
-1. **Path simulation**: Generate Monte Carlo paths of the forward SDE
-2. **Network training**: Optimize neural networks to satisfy the BSDE via Picard iteration
-3. **Convergence**: Iterate until the change between successive approximations is small
+### 3. Z Estimation Schemes
+The control process $Z_t$ is approximated using one of two methods:
 
-### Z Estimation Methods
+*   **Gradient-Based** (`z_method='gradient'`):
+    Computes $Z_t$ via Automatic Differentiation using the Feynman-Kac representation:
+    $$ Z_t = \nabla_x \mathcal{N}_Y(t, X_t) \cdot \sigma(t, X_t) $$
+    *Pros:* High accuracy, theoretically consistent. *Cons:* Computationally expensive for very high dimensions.
 
-Two approaches are available for estimating the control process Z:
-
-- **Gradient Method** (`z_method='gradient'`): Computes Z via automatic differentiation as Z = σ(t,X,Y,Z) · ∇Y. More accurate but slower to train.
-- **Regression Method** (`z_method='regression'`): Directly approximates Z with a separate neural network. Faster training but requires more parameters.
+*   **Regression-Based** (`z_method='regression'`):
+    Trains a secondary network $\mathcal{N}_Z(t, x; \phi)$ to approximate the martingale representation term:
+    $$ Z_t \approx \frac{1}{\Delta t} \mathbb{E}[ (Y_{t+\Delta t} - Y_t) \Delta W_t^\top \mid \mathcal{F}_t ] $$
+    *Pros:* Avoids second-order derivatives, faster per-step execution. *Cons:* Introduces additional approximation error.
 
 ## Performance Tips
 
