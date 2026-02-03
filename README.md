@@ -76,7 +76,7 @@ equation = BSBEquation(dim_x=dim_x, r=0.05, sigma=0.4, device=device)
 solver_cfg = SolverConfig(
     T=1.0,                      # Terminal time
     N=120,                      # Time discretization steps
-    num_paths=2000,             # Monte Carlo trajectories
+    num_paths=8000,             # Monte Carlo trajectories
     picard_iterations=10,       # Fixed-point iterations
     z_method='regression',      # Control approximation scheme
     device=device
