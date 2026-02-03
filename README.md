@@ -230,6 +230,7 @@ The control process Z<sub>t</sub> is approximated using one of two methods:
 Z_t = \nabla_x \mathcal{N}_Y(t, X_t) \cdot \sigma(t, X_t, Y_t, Z_t)
 ```
 
+<br>
 
 2. **Regression-Based** (`z_method='regression'`): Trains a secondary network to approximate the martingale representation term:
 ```math
