@@ -242,8 +242,8 @@ If you use this code in your research, please cite:
 ## Author
 
 **Bilal Saleh Husain**
-Master of Mathematics,
-University of Toronto, 2025
+Master of Mathematics, University of Toronto, 2025
+Contact: bilal.husain@mail.utoronto.ca | GitHub: [@bilalhusain126](https://github.com/bilalhusain126)
 
 ---
 
