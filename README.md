@@ -218,24 +218,20 @@ For uncoupled systems, the solver computes the fixed point of the solution map d
 
 For **Coupled** and **McKean-Vlasov** systems, a global fixed-point iteration resolves circular dependencies:
 
-- **Forward Step**: Simulate state process using frozen coefficients from previous estimates Y<sup>(k-1)</sup>, Z<sup>(k-1)</sup> (and empirical law for mean-field)
-- **Backward Step**: Solve the resulting uncoupled BSDE using Deep Picard Iteration to update Y<sup>(k)</sup>, Z<sup>(k)</sup>
+1. **Forward Step**: Simulate state process using frozen coefficients from previous estimates Y<sup>(k-1)</sup>, Z<sup>(k-1)</sup> (and empirical law for mean-field)
+2. **Backward Step**: Solve the resulting uncoupled BSDE using Deep Picard Iteration to update Y<sup>(k)</sup>, Z<sup>(k)</sup>
 
 ### Z Estimation Schemes
 
 The control process Z<sub>t</sub> is approximated using one of two methods:
 
-**Gradient-Based** (`z_method='gradient'`)
-
-Computes Z<sub>t</sub> via automatic differentiation using the Feynman-Kac representation:
+1. **Gradient-Based** (`z_method='gradient'`): Computes Z<sub>t</sub> via automatic differentiation using the Feynman-Kac representation:
 
 ```math
 Z_t = \nabla_x \mathcal{N}_Y(t, X_t) \cdot \sigma(t, X_t, Y_t, Z_t)
 ```
 
-**Regression-Based** (`z_method='regression'`)
-
-Trains a secondary network to approximate the martingale representation term:
+2. **Regression-Based** (`z_method='regression'`): Trains a secondary network to approximate the martingale representation term:
 
 ```math
 Z_t \approx \frac{1}{\Delta t} \mathbb{E}\left[ (Y_{t+\Delta t} - Y_t) \Delta W_t^\top \mid \mathcal{F}_t \right]
