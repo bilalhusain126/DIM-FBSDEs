@@ -108,15 +108,18 @@ print(f"Solution shapes: X={solution['X'].shape}, Y={solution['Y'].shape}")
 
 ### Visualization
 
-```python
 from dim_fbsde.utils import plot_pathwise_comparison
 
 # Compare numerical and analytical solutions
 fig, axes = plot_pathwise_comparison(
-    solution=solution,
-    analytical_Y_func=lambda t, x, **kw: equation.analytical_y(t, x, **kw),
-    analytical_Z_func=lambda t, x, **kw: equation.analytical_z(t, x, **kw),
-    component_idx=0
+    solutions=[solution],
+    labels=["Deep Picard"],
+    analytical_Y_func=equation.analytical_y,
+    analytical_Z_func=equation.analytical_z,
+    analytical_Y_kwargs={"T_terminal": solver_cfg.T},
+    analytical_Z_kwargs={"T_terminal": solver_cfg.T},
+    component_idx=0,
+    device=device
 )
 ```
 
