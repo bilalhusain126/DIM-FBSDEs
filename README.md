@@ -13,7 +13,7 @@ dX_t = \mu(t, X_t, Y_t, Z_t) dt + \sigma(t, X_t, Y_t, Z_t) dW_t, & X_0 = x_0 \\
 \end{cases}
 $$
 
-where $X_t \in \mathbb{R}^d$ is the forward state, $Y_t \in \mathbb{R}^m$ is the backward value, and $Z_t \in \mathbb{R}^{m \times d}$ is the control process.
+where $X_t \in \mathbb{R}^d$ is the forward process, $Y_t \in \mathbb{R}^m$ is the backward process, and $Z_t \in \mathbb{R}^{m \times d}$ is the control process.
 
 The solver overcomes the curse of dimensionality by approximating the solution maps $(t, x) \mapsto Y_t$ and $(t, x) \mapsto Z_t$ using deep neural networks. The architecture relies on a **Deep Picard Iteration**, effectively treating the solution as the fixed point of a contraction mapping on the space of stochastic processes.
 
@@ -23,9 +23,9 @@ The solver overcomes the curse of dimensionality by approximating the solution m
     *   **Uncoupled:** Standard systems where forward dynamics are independent of $(Y, Z)$.
     *   **Coupled:** Systems where $X_t$ depends on $Y_t$ and $Z_t$, resolved via a Global Picard Iteration.
     *   **McKean-Vlasov:** Mean-field systems where coefficients depend on the law $\mathcal{L}(X_t, Y_t, Z_t)$.
-*   **Rigorous Benchmarking:** Includes five standard test equations with analytical solutions (Black-Scholes-Barenblatt, Hure et al., Z-Coupled, Fully-Coupled, Han et al.).
+*   **Rigorous Benchmarking:** Includes five standard test equations with analytical solutions for the different problem classes. 
 *   **Two Z-Approximation Schemes:** Supports both **Gradient-based** and **Regression-based** approximation for the control process.
-*   **GPU Accelerated:** Fully vectorized PyTorch implementation supporting CUDA execution for high-dimensional path simulation.
+*   **GPU Accelerated:** Fully vectorized PyTorch implementation supporting CUDA execution for high-dimensional problems.
 
 
 
