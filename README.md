@@ -226,14 +226,12 @@ For **Coupled** and **McKean-Vlasov** systems, a global fixed-point iteration re
 The control process Z<sub>t</sub> is approximated using one of two methods:
 
 1. **Gradient-Based** (`z_method='gradient'`): Computes Z<sub>t</sub> via automatic differentiation using the Feynman-Kac representation:
-   
 ```math
 Z_t = \nabla_x \mathcal{N}_Y(t, X_t) \cdot \sigma(t, X_t, Y_t, Z_t)
 ```
 
 
 2. **Regression-Based** (`z_method='regression'`): Trains a secondary network to approximate the martingale representation term:
-   
 ```math
 Z_t \approx \frac{1}{\Delta t} \mathbb{E}\left[ (Y_{t+\Delta t} - Y_t) \Delta W_t^\top \mid \mathcal{F}_t \right]
 ```
