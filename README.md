@@ -233,9 +233,6 @@ Computes Z<sub>t</sub> via automatic differentiation using the Feynman-Kac repre
 Z_t = \nabla_x \mathcal{N}_Y(t, X_t) \cdot \sigma(t, X_t, Y_t, Z_t)
 ```
 
-- **Pros**: High accuracy, theoretically consistent
-- **Cons**: Computationally expensive for very high dimensions
-
 **Regression-Based** (`z_method='regression'`):
 
 Trains a secondary network to approximate the martingale representation term:
@@ -243,15 +240,6 @@ Trains a secondary network to approximate the martingale representation term:
 ```math
 Z_t \approx \frac{1}{\Delta t} \mathbb{E}\left[ (Y_{t+\Delta t} - Y_t) \Delta W_t^\top \mid \mathcal{F}_t \right]
 ```
-
-- **Pros**: Faster execution, avoids second-order derivatives
-- **Cons**: Introduces additional approximation error
-
-## Performance Tips
-
-1. **GPU Acceleration**: CUDA support provides significant speedup for high-dimensional problems
-2. **Network Architecture**: Start with 3-4 hidden layers of 40-64 units each
-3. **Picard Iterations**: 5-10 iterations typically sufficient for convergence
 
 ## Examples
 
