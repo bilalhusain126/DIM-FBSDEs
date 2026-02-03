@@ -114,13 +114,14 @@ from dim_fbsde.utils import plot_pathwise_comparison
 # Compare numerical and analytical solutions
 fig, axes = plot_pathwise_comparison(
     solutions=[solution],
-    labels=["Deep Picard"],
+    labels=['Numerical'],
     analytical_Y_func=equation.analytical_y,
     analytical_Z_func=equation.analytical_z,
-    analytical_Y_kwargs={"T_terminal": solver_cfg.T},
-    analytical_Z_kwargs={"T_terminal": solver_cfg.T},
+    analytical_Y_kwargs={'T_terminal': solver_cfg.T},
+    analytical_Z_kwargs={'T_terminal': solver_cfg.T},
     component_idx=0,
-    device=device
+    device=device,
+    num_paths_to_plot=5
 )
 ```
 
