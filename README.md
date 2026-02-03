@@ -65,14 +65,14 @@ from dim_fbsde.solvers import UncoupledFBSDESolver
 from dim_fbsde.nets import MLP
 from dim_fbsde.config import SolverConfig, TrainingConfig
 
-# Configure computation device
+# Configure device
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# 1. Define System Dynamics 
+# 1. Define system dynamics 
 dim_x = 3
 equation = BSBEquation(dim_x=dim_x, r=0.05, sigma=0.4, device=device)
 
-# 2. Configure Solver
+# 2. Configure solver
 solver_cfg = SolverConfig(
     T=1.0,                      # Terminal time
     N=120,                      # Time discretization steps
@@ -82,7 +82,7 @@ solver_cfg = SolverConfig(
     device=device
 )
 
-# 3. Configure Training
+# 3. Configure training
 train_cfg = TrainingConfig(
     batch_size=500,
     epochs=5,
@@ -90,7 +90,7 @@ train_cfg = TrainingConfig(
     verbose=True
 )
 
-# 4. Initialize Function Approximators
+# 4. Initialize function approximators
 # Input: (t, x) -> dim 1 + dim_x
 # Output: Y (dim 1) and Z (dim_x)
 input_dim = 1 + dim_x  
@@ -102,7 +102,7 @@ nn_Z = MLP(input_dim=input_dim, output_dim=dim_x, hidden_dims=[64, 64, 64])
 solver = UncoupledFBSDESolver(equation, solver_cfg, train_cfg, nn_Y, nn_Z)
 solution = solver.solve()
 
-# 6. Access Results
+# 6. Access results
 print(f"Solution shapes: X={solution['X'].shape}, Y={solution['Y'].shape}")
 ```
 
