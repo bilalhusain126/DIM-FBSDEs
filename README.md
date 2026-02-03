@@ -1,32 +1,33 @@
 # Deep Iterative Method for Forward-Backward SDEs
 
-A PyTorch implementation of the Deep Picard Iteration method for solving high-dimensional Forward-Backward Stochastic Differential Equations (FBSDEs), including uncoupled, coupled, and McKean-Vlasov systems. Developed as part of a Master's thesis at the University of Toronto.
+This repository contains the PyTorch implementation of the **Deep Iterative Method**, a numerical framework for solving high-dimensional Forward-Backward Stochastic Differential Equations (FBSDEs). This code accompanies the Master's thesis **"A Deep Iterative Method for High-Dimensional Coupled and McKean-Vlasov FBSDEs"** (University of Toronto, 2025).
 
 ## Overview
 
-This package provides efficient GPU-accelerated solvers for various classes of FBSDEs:
+This package solves general FBSDE systems of the form:
 
-- **Uncoupled FBSDEs**: Standard forward-backward systems
-- **Coupled FBSDEs**: Systems where forward dynamics depend on backward processes
-- **McKean-Vlasov FBSDEs**: Mean-field systems with distribution-dependent coefficients
+$$
+\begin{cases}
+dX_t = \mu(t, X_t, Y_t, Z_t) dt + \sigma(t, X_t, Y_t, Z_t) dW_t, & X_0 = x_0 \\
+-dY_t = f(t, X_t, Y_t, Z_t) dt - Z_t dW_t, & Y_T = g(X_T)
+\end{cases}
+$$
 
-The implementation leverages PyTorch for automatic differentiation and GPU acceleration, enabling efficient numerical solutions for high-dimensional problems.
+where $X_t \in \mathbb{R}^d$ is the forward state, $Y_t \in \mathbb{R}^m$ is the backward value, and $Z_t \in \mathbb{R}^{m \times d}$ is the control process.
 
-## Features
+The solver overcomes the curse of dimensionality by approximating the solution maps $(t, x) \mapsto Y_t$ and $(t, x) \mapsto Z_t$ using deep neural networks. The architecture relies on a **Deep Picard Iteration**, effectively treating the solution as the fixed point of a contraction mapping on the space of stochastic processes.
 
-- **Multiple Solver Types**: Uncoupled, Coupled, and McKean-Vlasov FBSDEs
-- **GPU Acceleration**: Full CUDA support via PyTorch
-- **Benchmark Problems**: Five standard test equations with analytical solutions
-  - Black-Scholes-Barenblatt (BSB)
-  - Hure et al. decoupled system
-  - Z-Coupled FBSDE
-  - Fully-Coupled FBSDE
-  - McKean-Vlasov mean-field system
-- **Two Solving Methods**: Gradient-based and regression-based Z approximation
-- **Neural Network Architecture**: Customizable multi-layer perceptrons
-- **Visualization Suite**: Pathwise comparison and error analysis plotting
-- **Type-Safe**: Comprehensive type hints throughout codebase
-- **Well-Documented**: Detailed docstrings and usage examples
+## Key Capabilities
+
+*   **Hierarchical Solver Support:**
+    *   **Uncoupled:** Standard systems where forward dynamics are independent of $(Y, Z)$.
+    *   **Coupled:** Systems where $X_t$ depends on $Y_t$ and $Z_t$, resolved via a Global Picard Iteration.
+    *   **McKean-Vlasov:** Mean-field systems where coefficients depend on the law $\mathcal{L}(X_t, Y_t, Z_t)$.
+*   **Rigorous Benchmarking:** Includes five standard test equations with analytical solutions (Black-Scholes-Barenblatt, Hure et al., Z-Coupled, Fully-Coupled, Han et al.).
+*   **Two Z-Approximation Schemes:** Supports both **Gradient-based** and **Regression-based** approximation for the control process.
+*   **GPU Accelerated:** Fully vectorized PyTorch implementation supporting CUDA execution for high-dimensional path simulation.
+
+
 
 ## Installation
 
