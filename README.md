@@ -218,8 +218,8 @@ For uncoupled systems, the solver computes the fixed point of the solution map d
 
 For **Coupled** and **McKean-Vlasov** systems, a global fixed-point iteration resolves circular dependencies:
 
-- **Forward Step**: Simulate state process using frozen coefficients from previous estimates Y^(k-1), Z^(k-1) (and empirical law for mean-field)
-- **Backward Step**: Solve the resulting uncoupled BSDE using Deep Picard Iteration to update Y^(k), Z^(k)
+- **Forward Step**: Simulate state process using frozen coefficients from previous estimates Y<sup>(k-1)</sup>, Z<sup>(k-1)</sup> (and empirical law for mean-field)
+- **Backward Step**: Solve the resulting uncoupled BSDE using Deep Picard Iteration to update Y<sup>(k)</sup>, Z<sup>(k)</sup>
 
 ### Z Approximation Methods
 
