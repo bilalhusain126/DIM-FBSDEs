@@ -155,22 +155,6 @@ dim_fbsde/
 └── config.py              # Configuration dataclasses
 ```
 
-## Benchmark Problems
-
-### Uncoupled Systems
-
-1. **Black-Scholes-Barenblatt (BSB)**: High-dimensional option pricing
-2. **Hure et al.**: Decoupled system with trigonometric nonlinearity
-
-### Coupled Systems
-
-3. **Z-Coupled**: Forward drift depends on control Z
-4. **Fully-Coupled**: Both drift and diffusion depend on (Y, Z)
-
-### Mean-Field Systems
-
-5. **McKean-Vlasov**: Distribution-dependent coefficients
-
 ## Advanced Usage
 
 ### Custom Equations
