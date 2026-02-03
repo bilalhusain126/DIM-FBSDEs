@@ -108,6 +108,7 @@ print(f"Solution shapes: X={solution['X'].shape}, Y={solution['Y'].shape}")
 
 ### Visualization
 
+```python
 from dim_fbsde.utils import plot_pathwise_comparison
 
 # Compare numerical and analytical solutions
