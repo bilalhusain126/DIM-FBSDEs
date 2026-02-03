@@ -56,6 +56,8 @@ pip install -e ".[dev]"
 
 ### Example: Solving Black-Scholes-Barenblatt Equation
 
+The following example solves the high-dimensional **Black-Scholes-Barenblatt** equation ($d=3$) using the Deep Picard Iteration method.
+
 ```python
 import torch
 from dim_fbsde.equations import BSBEquation
@@ -63,24 +65,24 @@ from dim_fbsde.solvers import UncoupledFBSDESolver
 from dim_fbsde.nets import MLP
 from dim_fbsde.config import SolverConfig, TrainingConfig
 
-# Configure device
+# Configure computation device
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# 1. Define the equation
-dim_x = 10
+# 1. Define System Dynamics 
+dim_x = 3
 equation = BSBEquation(dim_x=dim_x, r=0.05, sigma=0.4, device=device)
 
-# 2. Configure solver
+# 2. Configure Solver
 solver_cfg = SolverConfig(
     T=1.0,                      # Terminal time
-    N=120,                      # Time steps
-    num_paths=2000,             # Monte Carlo paths
+    N=120,                      # Time discretization steps
+    num_paths=2000,             # Monte Carlo trajectories
     picard_iterations=10,       # Fixed-point iterations
-    z_method='regression',      # Z estimation method
+    z_method='regression',      # Control approximation scheme
     device=device
 )
 
-# 3. Configure training
+# 3. Configure Training
 train_cfg = TrainingConfig(
     batch_size=500,
     epochs=5,
@@ -88,17 +90,20 @@ train_cfg = TrainingConfig(
     verbose=True
 )
 
-# 4. Create neural networks
-input_dim = 1 + dim_x  # (time, state)
-nn_Y = MLP(input_dim=input_dim, output_dim=1, hidden_dims=[40, 40, 40, 40])
-nn_Z = MLP(input_dim=input_dim, output_dim=dim_x, hidden_dims=[40, 40, 40, 40])
+# 4. Initialize Function Approximators
+# Input: (t, x) -> dim 1 + dim_x
+# Output: Y (dim 1) and Z (dim_x)
+input_dim = 1 + dim_x  
+nn_Y = MLP(input_dim=input_dim, output_dim=1, hidden_dims=[64, 64, 64])
+nn_Z = MLP(input_dim=input_dim, output_dim=dim_x, hidden_dims=[64, 64, 64])
 
 # 5. Solve
+# Executes the Deep Picard Iteration
 solver = UncoupledFBSDESolver(equation, solver_cfg, train_cfg, nn_Y, nn_Z)
 solution = solver.solve()
 
-# 6. Access results
-print(f"Solution shape: X={solution['X'].shape}, Y={solution['Y'].shape}")
+# 6. Access Results
+print(f"Solution shapes: X={solution['X'].shape}, Y={solution['Y'].shape}")
 ```
 
 ### Visualization
@@ -119,18 +124,18 @@ fig, axes = plot_pathwise_comparison(
 
 ```
 dim_fbsde/
-├── equations/          # FBSDE problem definitions
-│   ├── base.py        # Abstract base class
-│   └── benchmarks.py  # Standard test problems
-├── solvers/           # Numerical solvers
-│   ├── uncoupled.py   # Deep Picard for uncoupled systems
-│   ├── coupled.py     # Global iteration for coupled systems
-│   └── mckean_vlasov.py  # Solver for mean-field systems
-├── nets/              # Neural network architectures
-│   └── mlp.py         # Multi-layer perceptron
-├── utils/             # Utilities
+├── equations/             # FBSDE problem definitions
+│   ├── base.py            # Abstract base class
+│   └── benchmarks.py      # Standard test problems
+├── solvers/               # Numerical solvers
+│   ├── uncoupled.py       # Deep Picard for uncoupled systems
+│   ├── coupled.py         # Global iteration for coupled systems
+│   └── mckean_vlasov.py   # Solver for mean-field systems
+├── nets/                  # Neural network architectures
+│   └── mlp.py             # Multi-layer perceptron
+├── utils/                 # Utilities
 │   └── visualizations.py  # Plotting functions
-└── config.py          # Configuration dataclasses
+└── config.py              # Configuration dataclasses
 ```
 
 ## Benchmark Problems
