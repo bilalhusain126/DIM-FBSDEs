@@ -20,7 +20,8 @@ from dim_fbsde.equations.base import FBSDE
 
 
 # ==============================================================================
-# 1. Uncoupled Benchmark: Black-Scholes-Barenblatt
+# 1. Black-Scholes-Barenblatt (BSB) Equation
+#    Thesis Section 9.2.2: Uncoupled FBSDE
 # ==============================================================================
 
 class BSBEquation(FBSDE):
@@ -78,7 +79,8 @@ class BSBEquation(FBSDE):
 
 
 # ==============================================================================
-# 2. Uncoupled Benchmark: Hure et al. (2020)
+# 2. Decoupled FBSDE System
+#    Thesis Section 9.2.1: Uncoupled FBSDE
 # ==============================================================================
 
 class HureEquation(FBSDE):
@@ -137,7 +139,8 @@ class HureEquation(FBSDE):
 
 
 # ==============================================================================
-# 3. Coupled Benchmark: Z-Coupled (Hwang et al.)
+# 3. Z-Coupled FBSDE
+#    Thesis Section 9.3.1: Coupled FBSDE
 # ==============================================================================
 
 class ZCoupledEquation(FBSDE):
@@ -196,7 +199,8 @@ class ZCoupledEquation(FBSDE):
 
 
 # ==============================================================================
-# 4. Fully-Coupled Benchmark: Ji et al.
+# 4. Fully-Coupled FBSDE
+#    Thesis Section 9.3.2: Coupled FBSDE
 # ==============================================================================
 
 class FullyCoupledEquation(FBSDE):
@@ -257,7 +261,8 @@ class FullyCoupledEquation(FBSDE):
 
 
 # ==============================================================================
-# 5. McKean-Vlasov Benchmark: Han et al.
+# 5. McKean-Vlasov FBSDE System
+#    Thesis Section 9.4.1: Mean-Field FBSDE
 # ==============================================================================
 
 class McKeanVlasovEquation(FBSDE):
