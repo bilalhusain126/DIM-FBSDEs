@@ -144,17 +144,17 @@ fig, axes = plot_pathwise_comparison(
 ```
 dim_fbsde/
 ├── equations/             # FBSDE problem definitions
-│   ├── base.py            # Abstract base class
-│   └── benchmarks.py      # Standard test problems
+│   ├── base.py            # Abstract FBSDE interface
+│   └── benchmarks.py      # Benchmark systems with analytical solutions
 ├── solvers/               # Numerical solvers
-│   ├── uncoupled.py       # Deep Picard for uncoupled systems
+│   ├── uncoupled.py       # Deep Picard iteration for uncoupled systems
 │   ├── coupled.py         # Global iteration for coupled systems
-│   └── mckean_vlasov.py   # Solver for mean-field systems
+│   └── mckean_vlasov.py   # Global iteration for mean-field systems
 ├── nets/                  # Neural network architectures
-│   └── mlp.py             # Multi-layer perceptron
+│   └── mlp.py             # Multi-layer perceptron for Y and Z approximation
 ├── utils/                 # Utilities
-│   └── visualizations.py  # Plotting functions
-└── config.py              # Configuration dataclasses
+│   └── visualizations.py  # Pathwise comparison and error analysis plots
+└── config.py              # Configuration dataclasses (SolverConfig, TrainingConfig)
 ```
 
 ## Advanced Usage
