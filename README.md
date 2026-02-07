@@ -1,6 +1,8 @@
 # Deep Iterative Method for Forward-Backward SDEs
 
-This repository contains the PyTorch implementation of the **Deep Iterative Method**, a numerical framework for solving high-dimensional Forward-Backward Stochastic Differential Equations (FBSDEs). This code accompanies the Master's thesis **"A Deep Iterative Method for High-Dimensional Coupled and McKean-Vlasov FBSDEs"** (University of Toronto, 2025).
+This repository contains the PyTorch implementation of the **Deep Iterative Method**, a numerical framework for solving high-dimensional Forward-Backward Stochastic Differential Equations (FBSDEs). This code accompanies my Master's thesis **"A Deep Iterative Method for High-Dimensional Coupled and McKean-Vlasov FBSDEs"** (University of Toronto, 2025).
+
+FBSDEs provide the mathematical foundation for a wide range of problems in quantitative finance, stochastic control, and engineering. They arise naturally in determining optimal strategies in dynamic, uncertain environments—such as derivative pricing, portfolio optimization, and optimal control of stochastic systems.
 
 ## Overview
 
@@ -56,7 +58,7 @@ pip install -e ".[dev]"
 
 ### Example: Solving Black-Scholes-Barenblatt Equation
 
-The following example solves the high-dimensional **Black-Scholes-Barenblatt** equation ($d=3$) using the Deep Picard Iteration method.
+The following example solves the 3D **Black-Scholes-Barenblatt** equation using the Deep Picard Iteration method.
 
 ```python
 import torch
@@ -159,6 +161,8 @@ dim_fbsde/
 
 ### Custom Equations
 
+You can define custom FBSDE systems by subclassing the `FBSDE` base class and implementing the required methods. Once defined, your custom equation can be used with any of the solvers in the library.
+
 ```python
 from dim_fbsde.equations.base import FBSDE
 import torch
@@ -202,7 +206,7 @@ For uncoupled systems, the solver computes the fixed point of the solution map d
 
 For **Coupled** and **McKean-Vlasov** systems, a global fixed-point iteration resolves circular dependencies:
 
-1. **Forward Step**: Simulate state process using frozen coefficients from previous estimates Y<sup>(k-1)</sup>, Z<sup>(k-1)</sup> (and empirical law for mean-field)
+1. **Forward Step**: Simulate state process using fixed coefficients from previous estimates Y<sup>(k-1)</sup>, Z<sup>(k-1)</sup> (and empirical law for mean-field)
 2. **Backward Step**: Solve the resulting uncoupled BSDE using Deep Picard Iteration to update Y<sup>(k)</sup>, Z<sup>(k)</sup>
 
 ### Z Estimation Schemes
@@ -233,7 +237,7 @@ If you use this code in your research, please cite:
 ```bibtex
 @mastersthesis{husain2025fbsde,
   author  = {Bilal Saleh Husain},
-  title   = {A Deep Iterative Method for Coupled and McKean-Vlasov FBSDEs},
+  title   = {A Deep Iterative Method for High-Dimensional Coupled and McKean-Vlasov FBSDEs},
   school  = {University of Toronto},
   year    = {2025}
 }
