@@ -1,4 +1,4 @@
-# Deep Iterative Method for Forward-Backward SDEs
+# Deep Iterative Method for High-Dimensional FBSDEs
 
 This repository contains the PyTorch implementation of the **Deep Iterative Method**, a numerical framework for solving high-dimensional Forward-Backward Stochastic Differential Equations (FBSDEs). This code accompanies my Master's thesis **"A Deep Iterative Method for High-Dimensional Coupled and McKean-Vlasov FBSDEs"** (University of Toronto, 2025).
 
